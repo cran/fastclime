@@ -3,8 +3,6 @@
 #include <sys/types.h>
 #include <string.h>
 
-#include <malloc.h>
-
 #undef MALLOC
 #define	MALLOC(name,len,type) {	\
 	 (name) = (type *)malloc( (len) * sizeof(type) ); \

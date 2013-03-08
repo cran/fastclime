@@ -4,8 +4,8 @@
 #                  The ground truth is required                                 #
 # Authors: Haotian Pang, Han Liu and Robert Vanderbei                           #
 # Emails: <hpang@princeton.edu>, <hanliu@princeton.edu> and <rvdb@princetonedu> #
-# Date: Mar 8th 2013                                                            #
-# Version: 0.8						                        #
+# Date: Mar 13th 2013                                                           #
+# Version: 0.9						                        #
 #-------------------------------------------------------------------------------#
 
 fastclime.roc = function(path, theta, verbose = TRUE){

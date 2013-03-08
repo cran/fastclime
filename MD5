@@ -1,10 +1,10 @@
-e10da19ea1ae296fc29fc71c853a77ba *DESCRIPTION
+659aa2137441eb22a39fb2b1c7787a5d *DESCRIPTION
 bfce7730329d4d03dc6534dd87b7e29b *NAMESPACE
-f7526e03088ead1413e10a148cbb97da *R/fastclime.R
-f36262a553f8ec2a44182858413694fb *R/fastclime.generator.R
-3019f05e16a509b7e6a903a17a776f97 *R/fastclime.npn.R
-c5a0b003ce88528b79530720a406db17 *R/fastclime.plot.R
-d30246bcecb1ddb41bad7df609b2c8fa *R/fastclime.roc.R
+63c3fcc25c70598356142da9928fadaa *R/fastclime.R
+f98c0c855f59d8cad467708e4c4a6338 *R/fastclime.generator.R
+4a4d58b1f491e67673ea86a071da2af1 *R/fastclime.npn.R
+2515a63fb256adeb6922ae0acafad17a *R/fastclime.plot.R
+9626c7b81af3309c76ded6266e870900 *R/fastclime.roc.R
 e8f66da5e991922d7ddf97bb4b73f7fc *man/fastclime-package.Rd
 cea14d1e6f42b7e979adbeaf50f53d75 *man/fastclime.Rd
 b296d719daff6604f4b861992f97388e *man/fastclime.generator.Rd
@@ -25,7 +25,7 @@ ad5e9b747ce1895e811d2d2e8052eddc *src/heap.h
 7885ff8759cd54849b5888da3b1f0adb *src/lu.c
 f27fb8d738a94ff945bf48498eeee3ab *src/lu.h
 abc0a80ca8d0260b12e96ba9f9df608f *src/macros.h
-c0298ebc974b61354195d95d85daa040 *src/myalloc.h
+e1be8277ecf906d37bc71e80fb591490 *src/myalloc.h
 d6f83e0e72a27a6deb26c73669526fce *src/parametric.c
 38e9ff9c3d2f5b3b832010d120069caf *src/tree.c
 ebd8db35929bc9a80f444621e0e0f909 *src/tree.h
