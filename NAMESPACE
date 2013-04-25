@@ -3,16 +3,13 @@ import("Matrix","igraph","lattice","MASS")
 export(fastclime,
        fastclime.generator,
        fastclime.plot,
-       fastclime.roc,
+       fastclime.lambda,
        print.fastclime,plot.fastclime,
-       print.roc,plot.roc,
        print.sim,plot.sim,
        fastlp,
        paralp
        )
 
-S3method("print","roc")
-S3method("plot","roc")
 S3method("print","sim")
 S3method("plot","sim")
 S3method("plot","fastclime")

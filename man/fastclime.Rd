@@ -10,7 +10,7 @@ A fast parametric simplex solver for constrainted l1 minimization approach to sp
 }
 
 \usage{
-fastclime(x, lambda.min.ratio = NULL, nlambda = 50)
+fastclime(x, lambda.min = 0.1, nlambda = 50)
 }
 
 \arguments{
@@ -18,8 +18,8 @@ fastclime(x, lambda.min.ratio = NULL, nlambda = 50)
 There are 2 options: (1) \code{x} is an \code{n} by \code{d} data matrix (2) a \code{d} by \code{d} sample covariance matrix. The program automatically identifies the input matrix by checking the symmetry. (\code{n} is the sample size and \code{d} is the dimension)
 }
 
-  \item{lambda.min.ratio}{
-It is the largest sparsity of each column for estimated graphs. This program makes the sparsity level of the graph path increase from \code{0} to \code{lambda.min.ratio}.The default value is \code{0.1}. When you have a large data set, make sure the sparsity level is small enough, otherwise the program might take a long time.
+  \item{lambda.min}{
+This is the smallest value of lambda you would like the solver to explorer. The default value is \code{0.1}. If \code{nlambda} is large enough, the precision matrix selector function \code{\link{fastclime.lambda}} will be able to find all precision matrix corresponding to all lambda values ranging from \code{1} to \code{lambda.min}.
 }
 
   \item{nlambda}{
@@ -28,11 +28,11 @@ It is the number of the path length one would like to achieve. The default lengt
 }
 
 \details{
-This program uses parametric simplex linear programming method to solve CLIME (Constrained l1 Minimization Sparse Precision Matrix Estimation) problem. The solution path of the problem corresponds to the parameter in the simplex method.
+This program uses parametric simplex linear programming method to solve CLIME (Constrained l1 Minimization Sparse Precision Matrix Estimation) problem. The solution path of the problem corresponds to the parameter in the parametric simplex method.
 }
 
 \note{
-The maximum number of nlambda is 50, so it can only store a solution path of length 50. When the data set is very large, the solution path is set to be less than 15.
+The program will stop when either the maximum number of iteration for each column \code{nlambda} is achieved or when the required \code{lambda.min} is achieved for each column. When the dimension is huge, make sure \code{nlambda} is small so that there are enough memory to allocate the solution path. \code{lambdamtx} and \code{icovlist} will be used in \code{\link{fastclime.lambda}}.
 }
 
 \value{
@@ -46,25 +46,16 @@ An indicator of the sample covariance.
   \item{sigmahat}{
 The empirical covariance of the data. If cov.inpu is TRUE, sigmahat = data
 }
-  \item{nlambda}{
-The length of the path. The default value is 50. The program will stop when it reaches this value
+  \item{maxnlambda}{
+The length of the path. If the program finds \code{lambda.min} in less than \code{nlambda} iterations for all columns, then the acutal maximum lenth for all columns will be returned. Otherwise it equals \code{nlambda}.
 }
-  \item{lambda}{
-The sequence of regularization parameters for each column, it is a \code{nlambda} by \code{d} matrix. It will
-be filled with 0 when the program finds the required sparsity level in that column.
+  \item{lambdamtx}{
+The sequence of regularization parameters for each column, it is a \code{nlambda} by \code{d} matrix. It will be filled with 0 when the program finds the required \code{lambda.min} value for that column. This parameter is required for \code{\link{fastclime.lambda}}.
 }
-  \item{path}{
-A \code{nlambda} list of \code{d} by \code{d} adjacency matrices of estimated graphs as a graph path corresponding to \code{lambda}.
+  \item{icovlist}{
+A \code{nlambda} list of \code{d} by \code{d} precision matrices as an alternative graph path (numerical path) corresponding to \code{lambdamtx}. This parameter is also required for \code{\link{fastclime.lambda}}.
 }
-  \item{sparsity}{
-The sparsity levels of the graph path. It is a vector of length \code{nlambda}. The program takes the average weight of the two direction, so it is possible the final sparsity level is a bit higher than the required sparsity level.
-}
-  \item{icov}{
-A \code{nlambda} list of \code{d} by \code{d} precision matrices as an alternative graph path (numerical path) corresponding to \code{lambda}. 
-}
-  \item{df}{
-It is a \code{d} by \code{nlambda} matrix. Each row contains the number of nonzero coefficients along the solution path. 
-}
+
 }
 
 \author{
@@ -73,7 +64,7 @@ Maintainer: Haotan Pang<hpang@princeton.edu>
 }
 
 \seealso{
-\code{\link{fastclime.generator}}, \code{\link{fastclime.plot}}, \code{\link{fastclime.roc}}, and \code{\link{fastclime-package}}.
+\code{\link{fastclime.generator}}, \code{\link{fastclime.plot}}, \code{\link{fastclime.lambda}} and \code{\link{fastclime-package}}.
 }
 
 \examples{
@@ -81,10 +72,12 @@ Maintainer: Haotan Pang<hpang@princeton.edu>
 L = fastclime.generator(n = 100, d = 20)
 
 #graph path estimation
-out1 = fastclime(L$data,0.4)
-fastclime.plot(out1$path[[4]])
+out1 = fastclime(L$data,0.1)
+O = fastclime.lambda(out1$lambdamtx, out1$icovlist,0.2)
+fastclime.plot(O$path)
 
 #graph path estimation using the sample covariance matrix as the input.
-out1 = fastclime(cor(L$data),0.4)
-fastclime.plot(out1$path[[4]])
+out1 = fastclime(cor(L$data),0.1)
+O = fastclime.lambda(out1$lambdamtx, out1$icovlist,0.2)
+fastclime.plot(O$path)
 }

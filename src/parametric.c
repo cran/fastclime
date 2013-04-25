@@ -20,8 +20,7 @@ static int ColNum;
 static double **mu_mtx;
 static int lambda;
 static int status;
-static double lambda_ratio;
-static int **path_mtx;
+static double lambda_min_value;
 static double **icov_mtx;
 static int maxiter;
 static int *max_row_iter;
@@ -46,7 +45,7 @@ void solver2(
     double *c        
     );
 
-void parametric(double *SigmaInput, int *m1, double *mu_input, double *ratio, int *nlambda, int *ipath, int *maxnlambda, double *iicov)
+void parametric(double *SigmaInput, int *m1, double *mu_input, double *lambdamin, int *nlambda, int *maxnlambda, double *iicov)
 {
 
     int m;		/* number of constraints */
@@ -60,9 +59,10 @@ void parametric(double *SigmaInput, int *m1, double *mu_input, double *ratio, in
     double **LMATRIX;
     int i, j, k;
     int m0=*m1;
+    int m0sq;
            
     lambda=*nlambda;
-    lambda_ratio=*ratio;
+    lambda_min_value=*lambdamin;
     m=2*m0;
     n=m;
     nz=0;
@@ -77,10 +77,7 @@ void parametric(double *SigmaInput, int *m1, double *mu_input, double *ratio, in
     }
 
 
-    MALLOC(path_mtx, lambda,  int*);
-    for (i=0; i<lambda; i++) {
-        CALLOC(path_mtx[i], m0*m0,  int);
-    }
+ 
     MALLOC(icov_mtx, lambda,  double*);
     for (i=0; i<lambda; i++) {
         CALLOC(icov_mtx[i], m0*m0,  double);
@@ -97,13 +94,16 @@ void parametric(double *SigmaInput, int *m1, double *mu_input, double *ratio, in
          for (j=0; j<m0; j++){
 	        LMATRIX[i][j]      =  SigmaInput[i*m0+j];
 	        LMATRIX[i+m0][j]   = -SigmaInput[i*m0+j];
-		LMATRIX[i][j+m0]   = -SigmaInput[i*m0+j];
-		LMATRIX[i+m0][j+m0]=  SigmaInput[i*m0+j];
-		if(SigmaInput[i*m0+j]!=0){
+		    LMATRIX[i][j+m0]   = -SigmaInput[i*m0+j];
+		    LMATRIX[i+m0][j+m0]=  SigmaInput[i*m0+j];
+            if(SigmaInput[i*m0+j]!=0){
 		      nz+=4;
-		}
-	}
+	   	    }
+	    }
     }
+    
+    m0sq=m0*m0;
+    nz=4*m0sq;
 
     MALLOC(        a, nz+m,  double );      
     MALLOC(       ia, nz+m,   int );      
@@ -115,15 +115,16 @@ void parametric(double *SigmaInput, int *m1, double *mu_input, double *ratio, in
     }
 
     k=0;
+    
     for (j=0; j<n; j++) {
-	ka[j] = k;
-	for (i=0; i<m; i++) {
-	   if (LMATRIX[i][j]!=0) {
-	     a[k] = LMATRIX[i][j];
+	   ka[j] = k;
+	   for (i=0; i<m; i++) {
+	      if (LMATRIX[i][j]!=0) {
+	         a[k] = LMATRIX[i][j];
              ia[k] = i;
              k++;
-           }	    	    
-	}
+         }
+	   }
     }
     ka[n]=nz;
     
@@ -149,19 +150,18 @@ void parametric(double *SigmaInput, int *m1, double *mu_input, double *ratio, in
     }
       
  
-      for(i=0;i<lambda;i++){
-	for(j=0;j<m0;j++){
-	    mu_input[j*lambda+i]=mu_mtx[i][j];
+    for(i=0;i<lambda;i++){
+	    for(j=0;j<m0;j++){
+	       mu_input[j*lambda+i]=mu_mtx[i][j];
           
         }
       }
       for(j=0;j<m0*m0;j++){
-      for(i=1;i<lambda;i++){             
+         for(i=1;i<lambda;i++){
                 if(i>max_row_iter[j/m0]){
-                    path_mtx[i][j]=path_mtx[i-1][j];
                     icov_mtx[i][j]=icov_mtx[i-1][j];                
                 }            
-	    ipath[j*lambda+i]=path_mtx[i][j];
+
             iicov[j*lambda+i]=icov_mtx[i][j];
          }
       }
@@ -177,10 +177,6 @@ void parametric(double *SigmaInput, int *m1, double *mu_input, double *ratio, in
     } 
     FREE(mu_mtx);
  
-    for(i=0;i<lambda;i++){
-        FREE(path_mtx[i])
-    } 
-    FREE(path_mtx);
     for(i=0;i<lambda;i++){
         FREE(icov_mtx[i])
     } 
@@ -226,11 +222,10 @@ void solver2(
     double  *vec;
     int    *ivec;
     int     nvec;
-    int     from_scratch;
     int     N;
     double *output_vec;
-    int     count;
-    double ratio_convert;
+ //   int     count;
+// double ratio_convert;
   
 
     N=m+n;
@@ -286,7 +281,7 @@ void solver2(
     lufac( m, ka, ia, a, basics, 0 );
 
     for (iter=0; iter<lambda; iter++) {
-       count=0;
+    //   count=0;
        if(iter>maxiter){
            maxiter=iter;
        }
@@ -315,17 +310,13 @@ void solver2(
       }
       for(i=0;i<m/2;i++){	      
          if((output_vec[i]-output_vec[i+m/2])>EPS3){
-            count++;         
-            path_mtx[iter][m/2*ColNum+i]=1;
+    //        count++;
             icov_mtx[iter][m/2*ColNum+i]=output_vec[i]-output_vec[i+m/2];           
          }
       }
-       
-    
-      ratio_convert=(double)count/((m/2)-1);
-    
+        
 
-      if(ratio_convert>=lambda_ratio){
+      if(mu<=lambda_min_value){
        
           break;
           status=2;
@@ -444,7 +435,7 @@ void solver2(
       /*************************************************************
       * step 8: refactor basis                                     *
       *************************************************************/
-      from_scratch = refactor( m, ka, ia, a, basics, col_out, v );
+      refactor( m, ka, ia, a, basics, col_out, v );
     
     }
    

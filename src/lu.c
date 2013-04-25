@@ -80,7 +80,7 @@ typedef struct valind VALIND;
 |    colperm, icolperm, rowperm, irowperm                          |
 |               column and row permutations and their inverses    */
 
-int refactor(
+void refactor(
     int m,
     int *kA,
     int *iA,
@@ -118,7 +118,7 @@ int refactor(
 		enz = 0;
 		e_iter = 0;
 		from_scratch = TRUE;
-		return from_scratch;
+		return;
 	}
        
 	ocumtime  = cumtime;
@@ -129,12 +129,12 @@ int refactor(
 	cumtime += endtime - starttime;
 
 	from_scratch = FALSE;
-	return from_scratch;
+
 }
 
 void lufac( int m, int *kA, int *iA, double *A, int *basis, int v )
 {
-        int     kk, kkk, tag, rowdeg, coldeg, row, col, row2, col2;
+        int     kk, kkk, tag, rowdeg, coldeg, row=0, col, row2, col2;
         int     i, j, k, cnt, lnz, unz, lnzbnd, unzbnd, okey, deg,
                 heapnum, cur, method=MD;
         int     *degB=NULL, *degBt=NULL, *hkey=NULL, 
@@ -562,7 +562,7 @@ end:
 
 	    MALLOC( E, E_NZ, double );
 	    MALLOC(iE, E_NZ,    int );
-	    MALLOC(kE, E_N+2,    int );
+	    MALLOC(kE, E_N+1,    int );
 	}
 	kE[0] = 0;
 
@@ -601,7 +601,7 @@ int     bsolve(
         int i, ny=*pny;
         int k, row, consistent=TRUE;
         double beta;
-        double eps;
+        double eps=0;
 
 	static double *y=NULL;
 	static int  *tag=NULL;
@@ -736,7 +736,7 @@ int     btsolve(
         int i, ny=*pny;
         int k, row, consistent=TRUE;
         double beta;
-        double eps;
+        double eps=0;
 
         static double *y=NULL;
 	static int  *tag=NULL;
@@ -840,7 +840,6 @@ void lu_clo()
 	FREE( kE );
 	e_iter = 0; /* number of iterations since last refactorization */
 	enz=0;
-	rank;
 	cumtime = 0.0;
 	ocumtime= 0.0;
 }
@@ -871,7 +870,7 @@ int     dbsolve(int m, double *y)
         int i;
         int k, row, consistent=TRUE;
         double beta, *dwork;
-        double eps;
+        double eps=0;
 
         double starttime, endtime;
 
@@ -935,7 +934,7 @@ static void Gauss_Eta(
     int *pndx_B 
 )
 {
-    int i, j, k, col, kcol, ii, ndx_B=*pndx_B;
+    int i, j, k, col, kcol=0, ii, ndx_B=*pndx_B;
     double temp;
     static double *a=NULL;
     static int  *tag=NULL;
@@ -1016,7 +1015,7 @@ static void Gauss_Eta_T(
     int *pnvec 
 )
 {
-    int i, j, k, kk, kkk, col, nvec=*pnvec;
+    int i, j, k, kk=0, kkk=0, col, nvec=*pnvec;
     double temp;
     static double *a=NULL;
     static int  *tag=NULL;

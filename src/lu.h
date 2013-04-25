@@ -7,7 +7,7 @@ void lufac(
     int v 
 );
 
-int refactor( 
+void refactor( 
     int m, 
     int *kA, 
     int *iA, 

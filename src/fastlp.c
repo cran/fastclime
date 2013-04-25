@@ -25,7 +25,6 @@ static int status0;
 static double lambda0;
 static double *x;
 
-
 int ratio_test0(
 	double *dy, 
 	int   *idy,
@@ -88,6 +87,11 @@ void fastlp(double *obj, double *mat, double *rhs, int *m0 , int *n0, double *op
 	b[i]=rhs[i];
     }
 
+    for (i=0;i<m;i++){
+       for(j=0;j<n;j++){
+	
+       }	
+    }
 
 
     k=0;
@@ -161,7 +165,6 @@ void solver20(
     double  *vec;
     int    *ivec;
     int     nvec;
-    int     from_scratch;
     int     N;
 
     N=m+n;
@@ -419,13 +422,11 @@ void solver20(
       * step 9: refactor basis and print statistics                *
       *************************************************************/
 
-      from_scratch = refactor( m, ka, ia, a, basics, col_out, v );
-
-
+      refactor( m, ka, ia, a, basics, col_out, v );
 
   } 
 
-    
+   
 
       for (i=0; i<m; i++) {
 	  x[basics[i]] = x_B[i];

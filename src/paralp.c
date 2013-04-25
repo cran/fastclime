@@ -164,7 +164,6 @@ void solver21(
     double  *vec;
     int    *ivec;
     int     nvec;
-    int     from_scratch;
     int     N;
 
     N=m+n;
@@ -423,12 +422,12 @@ void solver21(
       * step 9: refactor basis and print statistics                *
       *************************************************************/
 
-      from_scratch = refactor( m, ka, ia, a, basics, col_out, v );
+      refactor( m, ka, ia, a, basics, col_out, v );
 
 
   } 
 
-
+      
 
       for (i=0; i<m; i++) {
 	  x[basics[i]] = x_B[i];

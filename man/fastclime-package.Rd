@@ -11,15 +11,16 @@ A package for generic linear programming, parameterized linear programming and c
 \tabular{ll}{
 Package: \tab fastclime\cr
 Type: \tab Package\cr
-Version: \tab 0.0.7\cr
-Date: \tab 2013-05-27\cr
+Version: \tab 1.2.4\cr
+Date: \tab 2014-04-25\cr
 License: \tab GPL-2\cr
 LazyLoad: \tab yes\cr
 }
-The package "fastclime" provides 3 main functions:\cr
+The package "fastclime" provides 4 main functions:\cr
 (1) the data generator creates random samples from multivariate normal distributions with different graph structures. Please refer to \code{\link{fastclime.generator}}.\cr
 (2) The parametric simplex solver for constrainted l1 minimization approach to sparse precision matrix estimation. Please refer to \code{\link{fastclime}}.\cr
-(3) A generic linear programming solver and a parameterized linear programming solver. Please refer to \code{\link{fastlp}} and \code{\link{paralp}}.\cr
+(3) The path selector function gives the path and precision matrix for a given parameter in CLIME. Please refer to \code{\link{fastclime.lambda}}.\cr
+(4) A generic linear programming solver and a parameterized linear programming solver. Please refer to \code{\link{fastlp}} and \code{\link{paralp}}.\cr
 }
 \author{
 Haotian Pang, Han Liu and Robert Vanderbei \cr
@@ -27,5 +28,5 @@ Maintainer: Haotan Pang<hpang@princeton.edu>;
 }
 
 \seealso{
-\code{\link{fastclime.generator}}, \code{\link{fastclime}}, \code{\link{fastclime.plot}} and \code{\link{fastclime.roc}}, \code{\link{fastlp}}, \code{\link{paralp}}
+\code{\link{fastclime.generator}}, \code{\link{fastclime}}, \code{\link{fastclime.plot}}, \code{\link{fastclime.lambda}}, \code{\link{fastlp}} and\code{\link{paralp}}
 }
