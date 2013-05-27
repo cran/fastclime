@@ -51,7 +51,7 @@ Area under the ROC curve
 
 \author{
 Haotian Pang, Han Liu and Robert Vanderbei \cr
-Maintainers: Haotan Pang<hpang@princeton.edu>
+Maintainer: Haotan Pang<hpang@princeton.edu>
 }
 
 \seealso{

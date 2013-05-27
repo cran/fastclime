@@ -38,7 +38,7 @@ The user can change \code{cur.num} to plot several figures and select the best o
 
 \author{
 Haotian Pang, Han Liu and Robert Vanderbei \cr
-Maintainers: Haotan Pang<hpang@princeton.edu>
+Maintainer: Haotan Pang<hpang@princeton.edu>
 }
 
 \seealso{

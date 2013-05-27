@@ -20,7 +20,7 @@ System reserved (No specific usage)
 
 \author{
 Haotian Pang, Han Liu and Robert Vanderbei \cr
-Maintainers: Haotan Pang<hpang@princeton.edu>
+Maintainer: Haotan Pang<hpang@princeton.edu>
 }
 \seealso{
 \code{\link{fastclime}}

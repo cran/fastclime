@@ -25,11 +25,11 @@ It is the largest sparsity of each column for estimated graphs. This program mak
 }
 
 \details{
-This program uses a parametric simplex linear programming method to solve a CLIME (a constrained l1 minimization sparse precision matrix estimation) problem. The solution path of the problem is corresponding to the parameter in the simplex method
+This program uses parametric simplex linear programming method to solve CLIME (Constrained l1 Minimization Sparse Precision Matrix Estimation) problem. The solution path of the problem corresponds to the parameter in the simplex method.
 }
 
 \note{
-The maximum number of nlambda is 50, so it can only store a solution path of length 50. When the data set is large, the solution path is set to be less than 15.
+The maximum number of nlambda is 50, so it can only store a solution path of length 50. When the data set is very large, the solution path is set to be less than 15.
 }
 
 \value{
@@ -66,11 +66,11 @@ It is a \code{d} by \code{nlambda} matrix. Each row contains the number of nonze
 
 \author{
 Haotian Pang, Han Liu and Robert Vanderbei \cr
-Maintainers: Haotan Pang<hpang@princeton.edu>
+Maintainer: Haotan Pang<hpang@princeton.edu>
 }
 
 \seealso{
-\code{\link{fastclime.generator}}, \code{\link{fastclime.npn}}, \code{\link{fastclime.plot}}, \code{\link{fastclime.roc}}, and \code{\link{fastclime-package}}.
+\code{\link{fastclime.generator}}, \code{\link{fastclime.plot}}, \code{\link{fastclime.roc}}, and \code{\link{fastclime-package}}.
 }
 
 \examples{
