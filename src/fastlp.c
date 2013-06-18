@@ -1,197 +1,125 @@
 /*****************************************************************************
-Implementation of the Primal Dual (i.e. Self Dual) Simplex Method on Sparse Precision Matrix Estimation
-H. Pang, H. Liu & R. Vanderbei, March 2013
-******************************************************************************/
-         
+
+                Implementation of the 
+		Primal Dual (i.e. Self Dual) Simplex Method Linear Programming Solver for R
+		R. Vanderbei & H. Pang, June 2013
+
+******************************************************************************/         
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <R.h>
+
 #include "myalloc.h"
 #include "lu.h"
 #include "linalg.h"
 #include "macros.h"
 
+
 #define EPS1 1.0e-8
 #define EPS2 1.0e-12
 #define EPS3 1.0e-5
+#define MAX_ITER 1000000
 
-static int ColNum; 
-static double **mu_mtx;
-static int lambda;
-static int status;
-static double lambda_ratio;
-static int **path_mtx;
-static double **icov_mtx;
-static int maxiter;
-static int *max_row_iter;
+static int status0;
+static int lambda0;
+static double *x;
+static double pi = 3.14159265359;
 
-
-int ratio_test(
+int ratio_test0(
 	double *dy, 
 	int   *idy,
 	int    ndy,
 	double *y, 
+        double *ybar,
 	double mu
 );
 
-void solver2(
-    int m,		
-    int n,		
-    int nz,		
-    int *ia, 		
-    int *ka, 		
-    double *a,		
-    double *b, 		
-    double *c        
+
+void solver20(
+    int m,		/* number of constraints */
+    int n,		/* number of variables */
+    int nz,		/* number of nonzeros in sparse constraint matrix */
+    int *ia, 		/* array row indices */
+    int *ka, 		/* array of indices into ia and a */
+    double *a,		/* array of nonzeros in the constraint matrix */
+    double *b, 		/* right-hand side */
+    double *c          /* objective coefficients */
     );
 
-void parametric(double *SigmaInput, int *m1, double *mu_input, double *ratio, int *nlambda, int *ipath, int *maxnlambda, double *iicov)
+
+
+void fastlp(double *obj, double *mat, double *rhs, int *m0 , int *n0, double *opt, int *status, double *lambda)
 {
 
-    int m;		/* number of constraints */
-    int n;		/* number of variables */
-    int nz;		/* number of nonzeros in sparse constraint matrix */
+    int m=*m0;		/* number of constraints */
+    int n=*n0;		/* number of variables */
+    int nz=0;		/* number of nonzeros in sparse constraint matrix */
     int *ia; 		/* array row indices */
     int *ka; 		/* array of indices into ia and a */
     double *a;		/* array of nonzeros in the constraint matrix */
     double *b; 		/* right-hand side */
     double *c;          /* objective coefficients */
-    double **LMATRIX;
-    int i, j, k;
-    int m0=*m1;
-           
-    lambda=*nlambda;
-    lambda_ratio=*ratio;
-    m=2*m0;
-    n=m;
-    nz=0;
-    status=0;
-    maxiter=0;
+    int i, j, k; 
+    status0 = *status;
+    lambda0 = *lambda;
 
-    MALLOC(max_row_iter,m0, int);
-
-    MALLOC(mu_mtx, lambda,  double*);
-    for (i=0; i<lambda; i++) {
-        CALLOC(mu_mtx[i], m0,  double);
+    if(lambda0<=EPS3){
+      lambda0=EPS3;
     }
 
 
-    MALLOC(path_mtx, lambda,  int*);
-    for (i=0; i<lambda; i++) {
-        CALLOC(path_mtx[i], m0*m0,  int);
-    }
-    MALLOC(icov_mtx, lambda,  double*);
-    for (i=0; i<lambda; i++) {
-        CALLOC(icov_mtx[i], m0*m0,  double);
-    }
-    
+    MALLOC(        a, m*n+m,  double );      
+    MALLOC(       ia, m*n+m,   int );      
+    MALLOC(       ka, n+m+1,  int );        
+    MALLOC(        c, n,   double );
+    MALLOC(        b, m,   double );    
 
-    MALLOC(LMATRIX, m,  double*);
-    for (i=0; i<m; i++) {
-        MALLOC(LMATRIX[i], n,  double);
-    }
+    /*****************************************************************
+     * Structure of the problem:
 
-
-    for (i=0; i<m0; i++){
-         for (j=0; j<m0; j++){
-	        LMATRIX[i][j]      =  SigmaInput[i*m0+j];
-	        LMATRIX[i+m0][j]   = -SigmaInput[i*m0+j];
-		LMATRIX[i][j+m0]   = -SigmaInput[i*m0+j];
-		LMATRIX[i+m0][j+m0]=  SigmaInput[i*m0+j];
-		if(SigmaInput[i*m0+j]!=0){
-		      nz+=4;
-		}
-	}
-    }
-
-    MALLOC(        a, nz+m,  double );      
-    MALLOC(       ia, nz+m,   int );      
-    MALLOC(       ka, n+m+1,  int );       
-    CALLOC(        c, n+m,   double );      
+     ***************************************************************/
 
     for (i=0;i<n;i++){
-	c[i]=-1.0;	
+	c[i]=obj[i];	
+    }
+
+    for (i=0;i<m;i++){
+	b[i]=rhs[i];	
     }
 
     k=0;
+	//Sparse matrix representation
     for (j=0; j<n; j++) {
-	ka[j] = k;
-	for (i=0; i<m; i++) {
-	   if (LMATRIX[i][j]!=0) {
-	     a[k] = LMATRIX[i][j];
-             ia[k] = i;
-             k++;
-           }	    	    
-	}
+	    ka[j] = k;
+	    for (i=0; i<m; i++) {
+		  if (mat[i*n+j]!=0)
+		  {
+	            a[k] = mat[i*n+j];
+		    ia[k] = i;
+                    k++;
+                    nz++;                  
+		  }    	    
+	    }
     }
     ka[n]=nz;
-    
+    solver20(m,n,nz,ia,ka,a,b,c);
+    *status=status0;
 
-    for(i=0;i<m;i++){
-        FREE(LMATRIX[i])
+    for(i=0;i<n;i++){
+        opt[i]=x[i];
     }
-    FREE(LMATRIX);
 
-   
-
-    for(ColNum=0;ColNum<m0;ColNum++){
-          MALLOC(        b, m,   double );  
-          for (i=0;i<m;i++){
-	      b[i]=0.0;
-	  }
-	  b[ColNum]=1.0;
-	  b[ColNum+m0]=-1.0;
-          solver2(m,n,nz,ia,ka,a,b,c);
-	  FREE(b);
-        
-                
-    }
-      
- 
-      for(i=0;i<lambda;i++){
-	for(j=0;j<m0;j++){
-	    mu_input[j*lambda+i]=mu_mtx[i][j];
-          
-        }
-      }
-      for(j=0;j<m0*m0;j++){
-      for(i=1;i<lambda;i++){             
-                if(i>max_row_iter[j/m0]){
-                    path_mtx[i][j]=path_mtx[i-1][j];
-                    icov_mtx[i][j]=icov_mtx[i-1][j];                
-                }            
-	    ipath[j*lambda+i]=path_mtx[i][j];
-            iicov[j*lambda+i]=icov_mtx[i][j];
-         }
-      }
-    
-    *maxnlambda=maxiter;
-    
-    FREE(a);
+    FREE(b);
+    FREE(a); 
     FREE(ia);
     FREE(ka);
     FREE(c);
-    for(i=0;i<lambda;i++){
-        FREE(mu_mtx[i])
-    } 
-    FREE(mu_mtx);
- 
-    for(i=0;i<lambda;i++){
-        FREE(path_mtx[i])
-    } 
-    FREE(path_mtx);
-    for(i=0;i<lambda;i++){
-        FREE(icov_mtx[i])
-    } 
-    FREE(icov_mtx);
-    FREE(max_row_iter);
-    
-
+    FREE(x);
 }
 
 
-void solver2(
+void solver20(
     int m,		/* number of constraints */
     int n,		/* number of variables */
     int nz,		/* number of nonzeros in sparse constraint matrix */
@@ -203,12 +131,15 @@ void solver2(
     )
 {
 
+	/*structure of the solver*/
+
     int *basics;
     int *nonbasics;
     int *basicflag;
     double  *x_B;	/* primal basics */
     double  *y_N;	/* dual nonbasics */
     double  *xbar_B;	/* primal basic perturbation */
+    double  *ybar_N;    /* dual nonbasic perturbation*/
     double  *dy_N;	/*  dual  basics step direction - values (sparse) */
     int    *idy_N;	/*  dual  basics step direction - row indices */
     int     ndy_N=0;	/* number of nonz in dy_N */
@@ -222,22 +153,24 @@ void solver2(
     int     col_out;	/* leaving column; index in 'basics' */
     int     iter = 0;	/* number of iterations */
     int     i,j,k,v=0;
-    double  s, t, tbar, mu=HUGE_VAL, primal_obj;
+    double  s, t, sbar, tbar, mu=HUGE_VAL, primal_obj;
     double  *vec;
     int    *ivec;
     int     nvec;
     int     from_scratch;
     int     N;
-    double *output_vec;
-    int     count;
-    double ratio_convert;
-  
 
     N=m+n;
+
+	 /*******************************************************************
+    * read in the data and initialize the common memory sites.
+    *******************************************************************/
+
+	//add the slack variables
+
     i = 0;
     k = ka[n];
-    for (j=n; j<N; j++) {
-	
+    for (j=n; j<N; j++) {	
 	a[k] = 1.0;
 	ia[k] = i;
 	i++;
@@ -249,7 +182,8 @@ void solver2(
     MALLOC(    x_B, m,   double );      
     MALLOC( xbar_B, m,   double );      
     MALLOC(   dx_B, m,   double );  
-    MALLOC(    y_N, n,   double );      
+    MALLOC(    y_N, n,   double );
+    MALLOC( ybar_N, n,   double );           
     MALLOC(   dy_N, n,   double );  
     MALLOC(    vec, N,   double );
     MALLOC(   ivec, N,    int );
@@ -261,18 +195,20 @@ void solver2(
     MALLOC(   basics,    m,   int );      
     MALLOC(   nonbasics, n,   int );      
     MALLOC(   basicflag, N,   int );
-    CALLOC(   output_vec, N, double );
+    CALLOC(   x, N, double );
 
     /**************************************************************** 
     *  initialization.              				    *
     ****************************************************************/
 
-    atnum(m,N,ka,ia,a,kat,iat,at);	
+    atnum(m,N,ka,ia,a,kat,iat,at);
 
     for (j=0; j<n; j++) {
 	nonbasics[j] = j;
 	basicflag[j] = -j-1;
-	      y_N[j] = -c[j];  
+	      y_N[j] = -c[j];
+           ybar_N[j] = 1;  
+
     }
 
     for (i=0; i<m; i++) {
@@ -282,57 +218,37 @@ void solver2(
 	    xbar_B[i] = 1;
     }
 
-
     lufac( m, ka, ia, a, basics, 0 );
 
-    for (iter=0; iter<lambda; iter++) {
-       count=0;
-       if(iter>maxiter){
-           maxiter=iter;
-       }
+ for (iter=0; iter<MAX_ITER; iter++) {
 
       /*************************************************************
       * step 1: find mu                                            *
       *************************************************************/
-    
       mu = -HUGE_VAL;
       col_in  = -1;
+      for (j=0; j<n; j++) {
+		if (ybar_N[j] > EPS2) { 
+			if ( mu < -y_N[j]/ybar_N[j] ) {
+			     mu = -y_N[j]/ybar_N[j];
+			     col_in  = j;
+			}
+		}
+      }
       col_out = -1;
-      for (i=0; i<m; i++) {
+
+     for (i=0; i<m; i++) {
 		if (xbar_B[i] > EPS2) { 
 			if ( mu < -x_B[i]/xbar_B[i] ) {
-			     mu = -x_B[i]/xbar_B[i];                                                    
+			     mu = -x_B[i]/xbar_B[i];
 			     col_out = i;
 			     col_in  = -1;
 			}
 		}
-      }  
-      
-      mu_mtx[iter][ColNum]=mu;
-          
-      for (i=0; i<m; i++){
-         output_vec[basics[i]] = x_B[i];
       }
-      for(i=0;i<m/2;i++){	      
-         if((output_vec[i]-output_vec[i+m/2])>EPS3){
-            count++;         
-            path_mtx[iter][m/2*ColNum+i]=1;
-            icov_mtx[iter][m/2*ColNum+i]=output_vec[i]-output_vec[i+m/2];           
-         }
-      }
-       
-    
-      ratio_convert=(double)count/((m/2)-1);
-    
-
-      if(ratio_convert>=lambda_ratio){
-       
-          break;
-          status=2;
-      }
-
-      if ( mu <= EPS3 ) {	/* optimal, we only need primal feasible */
-          status=3;       
+     
+       if ( mu <= lambda0 ) {	/* optimal */
+          status0=0;       
 	  break;
 
       }
@@ -343,20 +259,23 @@ void solver2(
 	*                   n            i			     *
 	*         where i = col_out                                  *
         *************************************************************/
-
+     if ( col_out >= 0 ) {
 	vec[0] = -1.0;
 	ivec[0] = col_out;
 	nvec = 1;
-	btsolve( m, vec, ivec, &nvec ); 
+
+	btsolve( m, vec, ivec, &nvec );  
 	Nt_times_y( N, at, iat, kat, basicflag, vec, ivec, nvec, 
 		     dy_N, idy_N, &ndy_N );
 
+	col_in = ratio_test0( dy_N, idy_N, ndy_N, y_N, ybar_N,mu );
+
         /*************************************************************
-	* step 3: ratio test to find entering column                 * 
+	* STEP 3: Ratio test to find entering column                 * 
         *************************************************************/
 
-	col_in = ratio_test( dy_N, idy_N, ndy_N, y_N, mu );
 	if (col_in == -1) { 	/* infeasible */
+	    status0 = 1;
 	    break;
 	}
 
@@ -366,14 +285,60 @@ void solver2(
 	*                   b         j                              *
 	*                                                            *
         *************************************************************/
-      
+
 	j = nonbasics[col_in];
 	for (i=0, k=ka[j]; k<ka[j+1]; i++, k++) {
 	     dx_B[i] =  a[k];
 	    idx_B[i] = ia[k];
 	}
 	ndx_B = i;
-	bsolve( m, dx_B, idx_B, &ndx_B );	 
+	bsolve( m, dx_B, idx_B, &ndx_B );
+
+        }
+
+        else {
+
+        /*************************************************************
+	*                        -1                                  *
+	* STEP 2: Compute dx  = B  N e                               * 
+	*                   B         j                              *
+        *************************************************************/
+
+	j = nonbasics[col_in];
+	for (i=0, k=ka[j]; k<ka[j+1]; i++, k++) {
+	     dx_B[i] =  a[k];
+	    idx_B[i] = ia[k];
+	}
+	ndx_B = i;
+	bsolve( m, dx_B, idx_B, &ndx_B );
+
+        /*************************************************************
+	* STEP 3: Ratio test to find leaving column                  * 
+        *************************************************************/
+
+	col_out = ratio_test0( dx_B, idx_B, ndx_B, x_B, xbar_B, mu );
+
+	if (col_out == -1) {	/* UNBOUNDED */
+	    status0 = 2;
+	    break;
+	}
+
+        /*************************************************************
+	*                          -1  T                             *
+	* STEP 4: Compute dy  = -(B  N) e                            * 
+	*                   N            i			     *
+	*                                                            *
+        *************************************************************/
+
+	 vec[0] = -1.0;
+	ivec[0] = col_out;
+	nvec = 1;
+
+	btsolve( m, vec, ivec, &nvec );  		
+	Nt_times_y( N, at, iat, kat, basicflag, vec, ivec, nvec, 
+		     dy_N, idy_N, &ndy_N );
+
+      }
 
       /*************************************************************
       *                                                            *
@@ -388,20 +353,21 @@ void solver2(
       *                   s = y /dy                                *
       *                        j   j                               *
       *************************************************************/
-     
+
       for (k=0; k<ndx_B; k++) if (idx_B[k] == col_out) break;
 
       t    =    x_B[col_out]/dx_B[k];
       tbar = xbar_B[col_out]/dx_B[k];
 
-
       for (k=0; k<ndy_N; k++) if (idy_N[k] == col_in) break;
 
       s    =    y_N[col_in]/dy_N[k];
+      sbar = ybar_N[col_in]/dy_N[k];
+
 
       /*************************************************************
       *                                _    _    _                 *
-      * step 6: set y  = y  - s dy     y  = y  - s dy              *
+      * step 7: set y  = y  - s dy     y  = y  - s dy              *
       *              n    n       n     n    n       n             *
       *                                _    _                      *
       *             y  = s             y  = s                      *
@@ -413,12 +379,16 @@ void solver2(
       *             x  = t             x  = t                      *
       *              j                  j                          *
       *************************************************************/
-     
+
+
       for (k=0; k<ndy_N; k++) {
 		j = idy_N[k];
 		y_N[j]    -= s   *dy_N[k];
-        y_N[col_in]    = s;
+                ybar_N[j] -= sbar*dy_N[k];
       }
+      
+      y_N[col_in]    = s;
+      ybar_N[col_in] = sbar;
 
       for (k=0; k<ndx_B; k++) {
 		i = idx_B[k];
@@ -430,10 +400,10 @@ void solver2(
       x_B[col_out]     = t;
       xbar_B[col_out]  = tbar;
 
-
       /*************************************************************
-      * step 7: update basis                                       * 
-      *************************************************************/   
+      * step 8: update basis                                       * 
+      *************************************************************/
+
       i =    basics[col_out];
       j = nonbasics[col_in];
       basics[col_out]   = j;
@@ -441,45 +411,76 @@ void solver2(
       basicflag[i] = -col_in-1;
       basicflag[j] = col_out;
 
+
       /*************************************************************
-      * step 8: refactor basis                                     *
+      * step 9: refactor basis and print statistics                *
       *************************************************************/
+
       from_scratch = refactor( m, ka, ia, a, basics, col_out, v );
-    
-    }
-   
-    max_row_iter[ColNum]=iter;
-    Nt_times_y( -1, at, iat, kat, basicflag, vec, ivec, nvec, 
+
+      if (from_scratch) {
+          primal_obj = sdotprod(c,x_B,basics,m);
+
+      }
+
+      primal_obj = sdotprod(c,x_B,basics,m);
+
+  } 
+
+      //primal_obj = sdotprod(c,x_B,basics,m);
+
+      for (i=0; i<m; i++) {
+	  x[basics[i]] = x_B[i];
+      }
+
+      for (i=0; i<n; i++) {
+	  x[nonbasics[i]] = y_N[i];
+      }
+
+      if(iter>=1){
+          Nt_times_y( -1, at, iat, kat, basicflag, vec, ivec, nvec, 
 		     dy_N, idy_N, &ndy_N );
+      }
+
+
+    /****************************************************************
+    * 	free work space                                             *
+    ****************************************************************/
 
     FREE(  vec );
     FREE( ivec );
     FREE(  x_B );
     FREE(  y_N );
-    FREE(xbar_B);
     FREE( dx_B );
     FREE(idx_B );
     FREE( dy_N );
     FREE(idy_N );
+    FREE(xbar_B);
+    FREE(ybar_N);
     FREE( nonbasics );
     FREE( basics );
-    FREE( output_vec );
     FREE(at);
     FREE(iat);
     FREE(basicflag);
     FREE(kat);
-    lu_clo();
-    btsolve(0, vec, ivec, &nvec);
-    bsolve(0, vec, ivec, &nvec);
+
+    if(iter>=1){
+       lu_clo();
+       btsolve(0, vec, ivec, &nvec);
+       bsolve(0, vec, ivec, &nvec);
+    }
+
 
 }
 
 
-int ratio_test(
+
+int ratio_test0(
 	double *dy, 
 	int   *idy,
 	int    ndy,
-	double *y,  
+	double *y, 
+	double *ybar, 
 	double mu
 )
 {
@@ -489,15 +490,18 @@ int ratio_test(
 	for (k=0; k<ndy; k++) {
 	    if ( dy[k] > EPS1 ) {
 	        j = idy[k];
-		if ( y[j]/dy[k] < min ) {
-			min = y[j]/dy[k];
-			 jj = j;			
+		if ( (y[j] + mu*ybar[j])/dy[k] < min ) {
+			min = (y[j] + mu*ybar[j])/dy[k];
+			 jj = j;
 		}
 	    }
 	}
 
 	return jj;
 }
+
+
+
 
 
 

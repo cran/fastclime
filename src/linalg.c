@@ -3,7 +3,7 @@
 #include "myalloc.h"
 #include "macros.h"
 
-
+#define EPS1 1.0e-8
 /*---------------------------------------------------------------+
 |  inner product between n-vectors x and y                      */
 
@@ -106,4 +106,86 @@ double maxv( double *x, int n)
         for (i=0; i<n; i++) maxv = MAX(maxv, ABS(x[i]));
 
         return (maxv);
+}
+
+
+double sdotprod(double *c, double *x_B, int *basics, int m)
+{
+	int i;
+	double prod = 0.0;
+	for (i=0; i<m; i++) { prod += c[basics[i]]*x_B[i]; }
+	return prod;
+}
+
+
+void Nt_times_y( 
+    int n, 
+    double *at, 
+    int *iat, 
+    int *kat, 
+    int *basicflag,
+    double *y, 
+    int *iy, 
+    int ny, 
+    double *yN,
+    int *iyN,
+    int *pnyN
+)
+{
+    int i,j,jj,k,kk;
+
+    static double *a=NULL;
+    static int  *tag=NULL;
+    static int *link=NULL;
+    static int  currtag=1;
+
+    if (n == -1) {
+	if (a != NULL) FREE(a);
+	if (tag != NULL) FREE(tag);
+	link--;
+	if (link != NULL) FREE(link);
+	return;
+    }
+
+
+    if (  a  == NULL) MALLOC(  a,  n,   double);
+    if ( tag == NULL) CALLOC( tag, n,   int);
+    if (link == NULL) {CALLOC(link, n+2, int); link++;}
+
+    jj = -1;
+    for (k=0; k<ny; k++) {
+	i = iy[k];
+
+	for (kk=kat[i]; kk<kat[i+1]; kk++) {
+	    j = iat[kk];
+	    if (basicflag[j] < 0) {
+		if (tag[j] != currtag) {
+		    a[j] = 0.0;
+		    tag[j] = currtag;
+		    link[jj] = j;
+		    jj = j;
+
+		}
+		a[j] += y[k]*at[kk];
+
+	    }
+
+	}
+    }
+
+    link[jj] = n;
+    currtag++;
+
+    k = 0;
+
+    for (jj=link[-1]; jj<n; jj=link[jj]) {
+	if ( ABS(a[jj]) > EPS1 ) {
+             yN[k] = a[jj];
+            iyN[k] = -basicflag[jj]-1;
+            k++;
+	}
+
+    }
+ 
+    *pnyN = k;
 }

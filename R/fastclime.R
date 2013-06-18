@@ -3,10 +3,10 @@
 # fastclime(): Main Function                                                    #
 # Authors: Haotian Pang, Han Liu and Robert Vanderbei                           #
 # Emails: <hpang@princeton.edu>, <hanliu@princeton.edu> and <rvdb@princetonedu> #
-# Date: Mar 13th 2013                                                           #
-# Version: 0.9						                        #
+# Date: Jun 18th 2013                                                           #
+# Version: 1.1						                        #
 #-------------------------------------------------------------------------------#
-fastclime <- function(x, lambda.min.ratio = NULL)
+fastclime <- function(x, lambda.min.ratio = NULL, nlambda = 50)
 {
   
   gcinfo(FALSE)
@@ -23,16 +23,6 @@ fastclime <- function(x, lambda.min.ratio = NULL)
 
   d<-dim(SigmaInput)[2]
  
-
-  if(d<=50){
-    nlambda=d
-   }
-   else if(d<=1000){
-   nlambda=50
-   }
-   else{
-   nlambda=15
-   }
 
   cat("Allocating memory \n")
   maxnlambda=0

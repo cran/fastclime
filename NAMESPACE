@@ -6,7 +6,8 @@ export(fastclime,
        fastclime.roc,
        print.fastclime,plot.fastclime,
        print.roc,plot.roc,
-       print.sim,plot.sim
+       print.sim,plot.sim,
+       fastlp
        )
 
 S3method("print","roc")

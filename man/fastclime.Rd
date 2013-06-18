@@ -10,7 +10,7 @@ A fast parametric simplex solver for constrainted l1 minimization approach to sp
 }
 
 \usage{
-fastclime(x, lambda.min.ratio = NULL)
+fastclime(x, lambda.min.ratio = NULL, nlambda = 50)
 }
 
 \arguments{
@@ -22,6 +22,9 @@ There are 2 options: (1) \code{x} is an \code{n} by \code{d} data matrix (2) a \
 It is the largest sparsity of each column for estimated graphs. This program makes the sparsity level of the graph path increase from \code{0} to \code{lambda.min.ratio}.The default value is \code{0.1}. When you have a large data set, make sure the sparsity level is small enough, otherwise the program might take a long time.
 }
 
+  \item{nlambda}{
+It is the number of the path length one would like to achieve. The default length is 50. Note if d is large and nlambda is also large, it is possible that the program will fail to allocate memory for the path.
+}
 }
 
 \details{
@@ -44,7 +47,7 @@ An indicator of the sample covariance.
 The empirical covariance of the data. If cov.inpu is TRUE, sigmahat = data
 }
   \item{nlambda}{
-The length of the path. The maximum value is 50 when d is small and it is 15 when d is large. The program will stop when it reaches this value
+The length of the path. The default value is 50. The program will stop when it reaches this value
 }
   \item{lambda}{
 The sequence of regularization parameters for each column, it is a \code{nlambda} by \code{d} matrix. It will
