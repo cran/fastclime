@@ -1,5 +1,5 @@
 useDynLib("fastclime")
-import("Matrix")
+import("Matrix","igraph","lattice","MASS")
 export(fastclime,
        fastclime.generator,
        fastclime.plot,

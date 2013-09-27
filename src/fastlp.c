@@ -81,25 +81,34 @@ void fastlp(double *obj, double *mat, double *rhs, int *m0 , int *n0, double *op
      ***************************************************************/
 
     for (i=0;i<n;i++){
-	c[i]=obj[i];	
+	c[i]=obj[i];
     }
 
     for (i=0;i<m;i++){
-	b[i]=rhs[i];	
+	b[i]=rhs[i];
     }
+
+    for (i=0;i<m;i++){
+       for(j=0;j<n;j++){
+	
+       }	
+    }
+
 
     k=0;
 	//Sparse matrix representation
     for (j=0; j<n; j++) {
-	    ka[j] = k;
+	    ka[j] = k; 
 	    for (i=0; i<m; i++) {
 		  if (mat[i*n+j]!=0)
 		  {
 	            a[k] = mat[i*n+j];
 		    ia[k] = i;
                     k++;
-                    nz++;                  
-		  }    	    
+                    nz++;  
+                  
+		  }    
+	    
 	    }
     }
     ka[n]=nz;
@@ -207,8 +216,7 @@ void solver20(
 	nonbasics[j] = j;
 	basicflag[j] = -j-1;
 	      y_N[j] = -c[j];
-           ybar_N[j] = 1;  
-
+           ybar_N[j] = 1;
     }
 
     for (i=0; i<m; i++) {
@@ -433,9 +441,6 @@ void solver20(
 	  x[basics[i]] = x_B[i];
       }
 
-      for (i=0; i<n; i++) {
-	  x[nonbasics[i]] = y_N[i];
-      }
 
       if(iter>=1){
           Nt_times_y( -1, at, iat, kat, basicflag, vec, ivec, nvec, 

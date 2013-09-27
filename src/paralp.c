@@ -441,9 +441,6 @@ void solver21(
 	  x[basics[i]] = x_B[i];
       }
 
-      for (i=0; i<n; i++) {
-	  x[nonbasics[i]] = y_N[i];
-      }
 
       if(iter>=1){
           Nt_times_y( -1, at, iat, kat, basicflag, vec, ivec, nvec, 
