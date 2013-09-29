@@ -3,8 +3,8 @@
 # fastclime.generator(): Data generator                                         #
 # Authors: Haotian Pang, Han Liu and Robert Vanderbei                           #
 # Emails: <hpang@princeton.edu>, <hanliu@princeton.edu> and <rvdb@princetonedu> #
-# Date: September 27th 2013                                                     #
-# Version: 1.2.1					                        #
+# Date: September 29th 2013                                                     #
+# Version: 1.2.2					                        #
 #-------------------------------------------------------------------------------#
 
 ## Main function

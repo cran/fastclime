@@ -276,7 +276,7 @@ void solver21(
 	Nt_times_y( N, at, iat, kat, basicflag, vec, ivec, nvec, 
 		     dy_N, idy_N, &ndy_N );
 
-	col_in = ratio_test0( dy_N, idy_N, ndy_N, y_N, ybar_N,mu );
+	col_in = ratio_test1( dy_N, idy_N, ndy_N, y_N, ybar_N,mu );
 
         /*************************************************************
 	* STEP 3: Ratio test to find entering column                 * 
@@ -324,7 +324,7 @@ void solver21(
 	* STEP 3: Ratio test to find leaving column                  * 
         *************************************************************/
 
-	col_out = ratio_test0( dx_B, idx_B, ndx_B, x_B, xbar_B, mu );
+	col_out = ratio_test1( dx_B, idx_B, ndx_B, x_B, xbar_B, mu );
 
 	if (col_out == -1) {	/* UNBOUNDED */
 	    status0 = 2;
