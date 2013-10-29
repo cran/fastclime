@@ -562,7 +562,7 @@ end:
 
 	    MALLOC( E, E_NZ, double );
 	    MALLOC(iE, E_NZ,    int );
-	    MALLOC(kE, E_N+1,    int );
+	    MALLOC(kE, E_N+2,    int );
 	}
 	kE[0] = 0;
 

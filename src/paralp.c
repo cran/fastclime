@@ -22,9 +22,8 @@
 #define MAX_ITER 1000000
 
 static int status0;
-static int lambda0;
+static double lambda0;
 static double *x;
-static double pi = 3.14159265359;
 static double *c_bar;
 static double *b_bar;
 
@@ -161,7 +160,7 @@ void solver21(
     int     col_out;	/* leaving column; index in 'basics' */
     int     iter = 0;	/* number of iterations */
     int     i,j,k,v=0;
-    double  s, t, sbar, tbar, mu=HUGE_VAL, primal_obj;
+    double  s, t, sbar, tbar, mu=HUGE_VAL;
     double  *vec;
     int    *ivec;
     int     nvec;
@@ -426,16 +425,10 @@ void solver21(
 
       from_scratch = refactor( m, ka, ia, a, basics, col_out, v );
 
-      if (from_scratch) {
-          primal_obj = sdotprod(c,x_B,basics,m);
-
-      }
-
-      primal_obj = sdotprod(c,x_B,basics,m);
 
   } 
 
-      //primal_obj = sdotprod(c,x_B,basics,m);
+
 
       for (i=0; i<m; i++) {
 	  x[basics[i]] = x_B[i];

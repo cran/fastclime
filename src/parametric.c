@@ -222,7 +222,7 @@ void solver2(
     int     col_out;	/* leaving column; index in 'basics' */
     int     iter = 0;	/* number of iterations */
     int     i,j,k,v=0;
-    double  s, t, tbar, mu=HUGE_VAL, primal_obj;
+    double  s, t, tbar, mu=HUGE_VAL;
     double  *vec;
     int    *ivec;
     int     nvec;

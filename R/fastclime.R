@@ -3,8 +3,6 @@
 # fastclime(): Main Function                                                    #
 # Authors: Haotian Pang, Han Liu and Robert Vanderbei                           #
 # Emails: <hpang@princeton.edu>, <hanliu@princeton.edu> and <rvdb@princetonedu> #
-# Date: September 29th 2013                                                     #
-# Version: 1.2.2					                        #
 #-------------------------------------------------------------------------------#
 fastclime <- function(x, lambda.min.ratio = NULL, nlambda = 50)
 {
