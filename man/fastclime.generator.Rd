@@ -6,7 +6,7 @@ Data generator
 }
 
 \description{
-Implements the data generation from multivariate normal distributions with different graph structures, including \code{"random"}, \code{"hub"}, \code{"cluster"}, \code{"band"} and \code{"scale-free"}.
+Implements the data generation from multivariate normal distributions with different graph structures, including \code{"random"}, \code{"hub"}, \code{"cluster"} and \code{"band"}.
 }
 
 \usage{
@@ -22,7 +22,7 @@ The number of observations (sample size). The default value is \code{200}.
 The number of variables (dimension). The default value is \code{50}.
 }
   \item{graph}{
-The graph structure with 4 options: \code{"random"}, \code{"hub"}, \code{"cluster"}, \code{"band"} and \code{"scale-free"}.
+The graph structure with 4 options: \code{"random"}, \code{"hub"}, \code{"cluster"} and \code{"band"}.
 }
   \item{v}{
 The off-diagonal elements of the precision matrix, controlling the magnitude of partial correlations with \code{u}. The default value is \code{0.3}.
@@ -50,7 +50,6 @@ Given the adjacency matrix \code{theta}, the graph patterns are generated as bel
 (II)\code{"hub"}:The row/columns are evenly partitioned into \code{g} disjoint groups. Each group is associated with a "center" row \code{i} in that group. Each pair of off-diagonal elements are set \code{theta[i,j]=theta[j,i]=1} for \code{i!=j} if \code{j} also belongs to the same group as \code{i} and \code{0} otherwise. It results in \code{d - g} edges in the graph.\cr\cr
 (III)\code{"cluster"}:The row/columns are evenly partitioned into \code{g} disjoint groups. Each pair of off-diagonal elements are set \code{theta[i,j]=theta[j,i]=1} for \code{i!=j} with the probability \code{prob}if both \code{i} and \code{j} belong to the same group, and \code{0} other wise. It results in about \code{g*(d/g)*(d/g-1)*prob/2} edges in the graph.\cr\cr
 (IV)\code{"band"}: The off-diagonal elements are set to be \code{theta[i,j]=1} if \code{1<=|i-j|<=g} and \code{0} other wise. It results in \code{(2d-1-g)*g/2} edges in the graph.\cr\cr
-(V) \code{"scale-free"}: The graph is generated using B-A algorithm. The initial graph has two connected nodes and each new node is connected to only one node in the existing graph with the probability proportional to the degree of the each node in the existing graph. It results in \code{d} edges in the graph.
 
 The adjacency matrix \code{theta} has all diagonal elements equal to \code{0}. To obtain a positive definite precision matrix, the smallest eigenvalue of \code{theta*v} (denoted by \code{e}) is computed. Then we set the precision matrix equal to \code{theta*v+(|e|+0.1+u)I}. The covariance matrix is then computed to generate multivariate normal data.
 }
@@ -99,8 +98,5 @@ L = fastclime.generator(graph = "hub", g = 6, vis = TRUE)
 
 ## hub graph with 8 clusters
 L = fastclime.generator(graph = "cluster", g = 8, vis = TRUE)
-
-## scale-free graphs
-L = fastclime.generator(graph="scale-free", vis = TRUE)
 
 }

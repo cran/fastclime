@@ -1,7 +1,7 @@
-070ab5a3ccadf297da6d8b28d72dd93c *DESCRIPTION
+14f64da498203e5dfa0d0c38e060a879 *DESCRIPTION
 91550c718c980cdc013d446f08e2ab43 *NAMESPACE
 9e4bf14ea92b98a590d7fa1eac42849f *R/fastclime.R
-4371684a2d1351fb9e2367944f3a3884 *R/fastclime.generator.R
+72e007d2cb34233ade78ee6e2f1f8b76 *R/fastclime.generator.R
 8ef3ee31b65f547317d1462094958e44 *R/fastclime.lambda.R
 b3963588ea4d8a6a2cd76260cc1d1e4d *R/fastclime.plot.R
 5c3828535b08a0c1788ed23c83861df0 *R/fastlp.R
@@ -12,7 +12,7 @@ ec90576375b24e35502847bdd1d85b6e *data/stockdata.rda
 f98003a926cc707a4151fca574f18949 *inst/doc/vignette.pdf
 fecc41afd3b960765e9bb14249608699 *man/fastclime-package.Rd
 0de78a40947a13893cc690823524fd3b *man/fastclime.Rd
-f13eef1099b8dad1091dd5764e6b6eb5 *man/fastclime.generator.Rd
+05bb9eae8a1e4a458d4c9630fd907b8d *man/fastclime.generator.Rd
 324d7b637a23e7d94cd740ae71269204 *man/fastclime.lambda.Rd
 64307ab02e80b23986e1f4446aa316c6 *man/fastclime.plot.Rd
 35a34d4b383d8d9798b754ca6ebd808b *man/fastlp.Rd
@@ -22,7 +22,6 @@ e45d01c047c1c70cd41af8adb55ec220 *man/paralp.Rd
 b196c00bb421f420ddd428008f97458b *man/print.fastclime.Rd
 fbb7265b9ba8567834e3a326c7b67247 *man/print.sim.Rd
 f584effdd8752b5956fea4ac449e7e33 *man/stockdata.Rd
-b10cd7a70f4a0772e49935ad349b56a8 *src/SFGen.c
 35a63cab361acbbe913b1ed670d0c13f *src/fastlp.c
 3d21bc5d49dee6d81d869301b5adbcb0 *src/heap.c
 ad5e9b747ce1895e811d2d2e8052eddc *src/heap.h
@@ -33,7 +32,7 @@ af36d5dada6396e15a3010c505432213 *src/lu.h
 abc0a80ca8d0260b12e96ba9f9df608f *src/macros.h
 e1be8277ecf906d37bc71e80fb591490 *src/myalloc.h
 f71b04cab340901ada6b838edac84ff9 *src/paralp.c
-166e45905eb115b30eac2e29e86da9a2 *src/parametric.c
+38e3e602e5d4ef2881e1d209050bf5d2 *src/parametric.c
 38e9ff9c3d2f5b3b832010d120069caf *src/tree.c
 ebd8db35929bc9a80f444621e0e0f909 *src/tree.h
 0dcd4cce00eb3ef52ec58251b0c62ea4 *vignettes/fastclime.pdf

@@ -256,7 +256,7 @@ void solver2(
     MALLOC(   basics,    m,   int );      
     MALLOC(   nonbasics, n,   int );      
     MALLOC(   basicflag, N,   int );
-    CALLOC(   output_vec, N, double );
+    
 
     /**************************************************************** 
     *  initialization.              				    *
@@ -281,6 +281,8 @@ void solver2(
     lufac( m, ka, ia, a, basics, 0 );
 
     for (iter=0; iter<lambda; iter++) {
+
+      CALLOC(   output_vec, N, double );
     //   count=0;
        if(iter>maxiter){
            maxiter=iter;
@@ -309,7 +311,7 @@ void solver2(
          output_vec[basics[i]] = x_B[i];
       }
       for(i=0;i<m/2;i++){	      
-         if((output_vec[i]-output_vec[i+m/2])>EPS3){
+         if(fabs(output_vec[i]-output_vec[i+m/2])>EPS3){
     //        count++;
             icov_mtx[iter][m/2*ColNum+i]=output_vec[i]-output_vec[i+m/2];           
          }
@@ -408,8 +410,10 @@ void solver2(
       for (k=0; k<ndy_N; k++) {
 		j = idy_N[k];
 		y_N[j]    -= s   *dy_N[k];
-        y_N[col_in]    = s;
+        
       }
+
+      y_N[col_in]    = s;
 
       for (k=0; k<ndx_B; k++) {
 		i = idx_B[k];
@@ -436,6 +440,7 @@ void solver2(
       * step 8: refactor basis                                     *
       *************************************************************/
       refactor( m, ka, ia, a, basics, col_out, v );
+      FREE( output_vec );
     
     }
    
