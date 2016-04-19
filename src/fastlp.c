@@ -110,7 +110,7 @@ void fastlp(double *obj, double *mat, double *rhs, int *m0 , int *n0, double *op
 	    
 	    }
     }
-    ka[n]=nz;
+    ka[n]=k;
     solver20(m,n,nz,ia,ka,a,b,c);
     *status=status0;
 

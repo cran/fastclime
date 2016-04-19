@@ -1,5 +1,5 @@
-\name{fastclime.lambda}
-\alias{fastclime.lambda}
+\name{fastclime.selector}
+\alias{fastclime.selector}
 
 \title{
 A precision matrix and path selector function for fastclime
@@ -10,7 +10,7 @@ Select the precision matrix and solution path for a given parameter lambda
 }
 
 \usage{
-fastclime.lambda(lambdamtx, icovlist, lambda)
+fastclime.selector(lambdamtx, icovlist, lambda)
 }
 
 \arguments{
@@ -34,15 +34,15 @@ The function is able to estimate the precision matrices corresponding to all \co
 }
 
 \value{
-An object with S3 class "fastclime.lambda" is returned:
+An object with S3 class "fastclime.selector" is returned:
  \item{icov}{
 The estimated precision matrix corresponding to \code{lambda}.
 }
-  \item{path}{
+  \item{adaj}{
 The estimated graph path corresponding to \code{lambda}.
 }
   \item{sparsity}{
-The sparsity level of this estimated graph path.
+The sparsity level of this estimated graph for this value of lambda.
 }
 
 }
@@ -62,6 +62,6 @@ L = fastclime.generator(n = 100, d = 20)
 
 #graph path estimation
 out1 = fastclime(L$data,0.1)
-O = fastclime.lambda(out1$lambdamtx, out1$icovlist,0.2)
-fastclime.plot(O$path)
+out2 = fastclime.selector(out1$lambdamtx, out1$icovlist,0.2)
+fastclime.plot(out2$adaj)
 }

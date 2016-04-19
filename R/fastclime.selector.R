@@ -5,14 +5,14 @@
 # Version: 1.2.4					                                                       #
 #------------------------------------------------------------------------------------------#
 
-fastclime.lambda <- function(lambdamtx, icovlist, lambda)
+fastclime.selector <- function(lambdamtx, icovlist, lambda)
 {
 
   gcinfo(FALSE)
   d<-dim(icovlist[[1]])[2]
   maxnlambda<-dim(lambdamtx)[1]
   icov<-matrix(0,d,d)
-  path<-matrix(0,d,d)
+  adaj<-matrix(0,d,d)
   seq<-rep(0,d)
   threshold<-1e-5
   status<-0
@@ -34,13 +34,16 @@ fastclime.lambda <- function(lambdamtx, icovlist, lambda)
      
   }
   
-  icov<-(icov+t(icov))/2
+  icov <- icov*(abs(icov)<= abs(t(icov)))+ t(icov)*(abs(icov)> abs(t(icov)))
+  cat("changed to min")
+  #icov<-(icov+t(icov))/2
   tmpicov<-icov
   diag(tmpicov)<-0
-  path<-Matrix(tmpicov>threshold, sparse=TRUE)*1
+  adaj<-Matrix(tmpicov>threshold, sparse=TRUE)*1
  
+
   
-  sparsity<-(sum(path))/(d^2-d)
+  sparsity<-(sum(adaj))/(d^2-d)
   
   if(status==1)
   {
@@ -50,8 +53,8 @@ fastclime.lambda <- function(lambdamtx, icovlist, lambda)
   rm(temp_lambda,seq,d,threshold)
   gc()
   
-  result<-list("icov"=icov, "path"=path,"sparsity"=sparsity)
-  class(result)="fastclime.lambda"
+  result<-list("icov"=icov, "adaj"=adaj,"sparsity"=sparsity)
+  class(result)="fastclime.selector"
   
   return(result)
 

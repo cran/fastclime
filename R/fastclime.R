@@ -12,14 +12,15 @@ fastclime <- function(x, lambda.min=0.1, nlambda = 50)
   gcinfo(FALSE)
   cov.input<-1
   SigmaInput<-x
+  d<-dim(SigmaInput)[2]
 
   if(!isSymmetric(x))
   {
-     SigmaInput<-cor(x)
+     SigmaInput<-cov(x)*(1-1/d)
      cov.input<-0
   }
 
-  d<-dim(SigmaInput)[2]
+
  
   cat("Allocating memory \n")
   maxnlambda=0

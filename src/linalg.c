@@ -74,15 +74,20 @@ void atnum( int m, int n, int *ka, int *ia, double *a,
 
         CALLOC( iwork, m, int );
 
+
         for (k=0; k<ka[n]; k++) {
                 row = ia[k];
+                for(i=0; i<m; i++){
+              }
                 iwork[row]++;
         }
+
         kat[0] = 0;
         for (i=0; i<m; i++) {
                 kat[i+1] = kat[i] + iwork[i];
                 iwork[i] = 0;
         }
+
         for (j=0; j<n; j++) {
                 for (k=ka[j]; k<ka[j+1]; k++) {
                         row = ia[k];
@@ -92,6 +97,7 @@ void atnum( int m, int n, int *ka, int *ia, double *a,
                         at[addr]  = a[k];
                 }
         }
+
         FREE( iwork );
 }
 
@@ -140,11 +146,11 @@ void Nt_times_y(
     static int  currtag=1;
 
     if (n == -1) {
-	if (a != NULL) FREE(a);
-	if (tag != NULL) FREE(tag);
-	link--;
-	if (link != NULL) FREE(link);
-	return;
+	   if (a != NULL) FREE(a);
+	   if (tag != NULL) FREE(tag);
+	   link--;
+	   if (link != NULL) FREE(link);
+	   return;
     }
 
 
