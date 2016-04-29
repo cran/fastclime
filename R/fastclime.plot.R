@@ -3,8 +3,8 @@
 # fastclime.generator(): graph visualization                                    #
 # Authors: Haotian Pang, Han Liu and Robert Vanderbei                           #
 # Emails: <hpang@princeton.edu>, <hanliu@princeton.edu> and <rvdb@princetonedu> #
-# Date: April 25th 2013                                                         #
-# Version: 1.2.4					                                            #
+# Date: April 22th 2016                                                           #
+# Version: 1.4.1					                                            #
 #-------------------------------------------------------------------------------#
 
 fastclime.plot = function(G, epsflag = FALSE, graph.name = "default", cur.num = 1, location=NULL){

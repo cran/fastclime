@@ -24,8 +24,8 @@ The package "fastclime" provides 5 main functions:\cr
 (5) An implementation of the Primal Dual (i.e. Self Dual) Simplex Method on the Dantzig selector. Please refer to \code{\link{dantzig}}, \code{\link{dantzig.selector}} and \code{\link{dantzig.generator}}.\cr
 }
 \author{
-Haotian Pang, Han Liu and Robert Vanderbei \cr
-Maintainer: Haotan Pang<hpang@princeton.edu>;
+Haotian Pang, Di Qi, Han Liu and Robert Vanderbei \cr
+Maintainer: Haotian Pang<hpang@princeton.edu>;
 }
 
 \seealso{

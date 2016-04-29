@@ -1,8 +1,8 @@
 # fastclime.lambda(): Function used to select the solution path for a given lambda         #
 # Authors: Haotian Pang, Han Liu and Robert Vanderbei                                      #
 # Emails: <hpang@princeton.edu>, <hanliu@princeton.edu> and <rvdb@princetonedu>            #
-# Date: April 25th 2014                                                                    #
-# Version: 1.2.4					                                                       #
+# Date: April 22th 2016                                                           #
+# Version: 1.4.1					                                                       #
 #------------------------------------------------------------------------------------------#
 
 fastclime.selector <- function(lambdamtx, icovlist, lambda)
@@ -35,8 +35,7 @@ fastclime.selector <- function(lambdamtx, icovlist, lambda)
   }
   
   icov <- icov*(abs(icov)<= abs(t(icov)))+ t(icov)*(abs(icov)> abs(t(icov)))
-  cat("changed to min")
-  #icov<-(icov+t(icov))/2
+
   tmpicov<-icov
   diag(tmpicov)<-0
   adaj<-Matrix(tmpicov>threshold, sparse=TRUE)*1
@@ -47,7 +46,7 @@ fastclime.selector <- function(lambdamtx, icovlist, lambda)
   
   if(status==1)
   {
-    cat("Some columns do not reach the required lambda!\n You may want to increase lambda.min or use a large nlambda. \n")
+    cat("Some columns do not reach the required lambda!\n You may want to increase lambda.min or use a larger nlambda. \n")
   }
   
   rm(temp_lambda,seq,d,threshold)

@@ -3,8 +3,8 @@
 # fastclp(): A parametric simplex LP solver                                     #
 # Authors: Haotian Pang, Han Liu and Robert Vanderbei                           #
 # Emails: <hpang@princeton.edu>, <hanliu@princeton.edu> and <rvdb@princetonedu> #
-# Date: April 4th 2013                                                          #
-# Version: 1.2.4					                                            #
+# Date: April 22th 2016                                                           #
+# Version: 1.4.1					                                            #
 #-------------------------------------------------------------------------------#
 
 fastlp <- function(obj, mat, rhs,lambda=0){

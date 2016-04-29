@@ -3,9 +3,9 @@ Type: Package
 Title: A Fast Solver for Parameterized LP Problems, Constrained L1
         Minimization Approach to Sparse Precision Matrix Estimation and
         Dantzig Selector
-Version: 1.4
-Date: 2016-04-18
-Author: Haotian Pang, Han Liu and Robert Vanderbei
+Version: 1.4.1
+Date: 2016-04-22
+Author: Haotian Pang, Di Qi, Han Liu and Robert Vanderbei
 Maintainer: Haotian Pang <hpang@princeton.edu>
 Depends: R (>= 2.15.0), lattice, igraph, MASS, Matrix
 Description: Provides a method of recovering the precision matrix efficiently 
@@ -15,6 +15,6 @@ Description: Provides a method of recovering the precision matrix efficiently
         solver using parametric simplex method.
 License: GPL-2
 Repository: CRAN
-Packaged: 2016-04-18 20:42:46 UTC; diqi
+Packaged: 2016-04-22 22:28:08 UTC; diqi
 NeedsCompilation: yes
-Date/Publication: 2016-04-19 01:03:54
+Date/Publication: 2016-04-29 23:59:28

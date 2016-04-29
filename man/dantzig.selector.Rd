@@ -15,7 +15,7 @@ dantzig.selector(lambdalist, BETA0, lambda)
 
 \arguments{
   \item{lambdalist}{
-\code{lambdalist} is the decrementing path of the lambda solution values. It is obtained from the \code{dantzig} function.
+\code{lambdalist} is the length \code{validn} decrementing path of the lambda solution values. It is obtained from the \code{dantzig} function.
 }
   \item{BETA0}{
 \code{BETA0} is a \code{d} by \code{validn} matrix where each column has an estimated regression coefficient vector given a given lambda interval. It is obtained from the \code{dantzig} function.

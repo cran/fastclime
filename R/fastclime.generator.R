@@ -3,8 +3,8 @@
 # fastclime.generator(): Data generator                                         #
 # Authors: Haotian Pang, Han Liu and Robert Vanderbei                           #
 # Emails: <hpang@princeton.edu>, <hanliu@princeton.edu> and <rvdb@princetonedu> #
-# Date: April 25th 2013                                                         #
-# Version: 1.2.4					                                            # 
+# Date: April 22th 2016                                                         #
+# Version: 1.4.1					                                            # 
 #-------------------------------------------------------------------------------#
 
 ## Main function
@@ -98,7 +98,8 @@ fastclime.generator = function(n = 200, d = 50, graph = "random", v = NULL, u = 
 	
 	# generate multivariate normal data
 	x = mvrnorm(n,rep(0,d),sigma)
-	sigmahat = cor(x)
+	
+	sigmahat = cov(x)*(1-1/n)
 	
 	# graph and covariance visulization
 	if(vis == TRUE){

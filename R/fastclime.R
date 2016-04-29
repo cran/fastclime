@@ -1,10 +1,11 @@
 #-------------------------------------------------------------------------------#
 # Package: fastclime                                                            #
 # fastclime(): Main Function                                                    #
-# Authors: Haotian Pang, Han Liu and Robert Vanderbei                           #
-# Emails: <hpang@princeton.edu>, <hanliu@princeton.edu> and <rvdb@princetonedu> #
-# Date: April 25th 2014                                                         #
-# Version: 1.2.4					                                            #
+# Authors: Haotian Pang, Di Qi, Han Liu and Robert Vanderbei                    #
+# Emails: <hpang@princeton.edu>, <dqi@princeton,edu>, <hanliu@princeton.edu>    #
+# and <rvdb@princetonedu>                                                       #
+# Date: April 22th 2016                                                         #
+# Version: 1.4.1          					                                            #
 #-------------------------------------------------------------------------------#
 fastclime <- function(x, lambda.min=0.1, nlambda = 50)
 {
@@ -16,7 +17,8 @@ fastclime <- function(x, lambda.min=0.1, nlambda = 50)
 
   if(!isSymmetric(x))
   {
-     SigmaInput<-cov(x)*(1-1/d)
+     n<-dim(SigmaInput)[1]
+     SigmaInput<-cov(x)*(1-1/n)
      cov.input<-0
   }
 
