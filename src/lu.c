@@ -825,7 +825,7 @@ int     btsolve(
         return consistent;
 }
 
-void lu_clo()
+void lu_clo(void)
 {
         FREE( rowperm ); FREE( irowperm );
         FREE( colperm ); FREE( icolperm );

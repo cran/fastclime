@@ -1,4 +1,4 @@
-a1f998ed049427b329c0ca3b23e280ea *DESCRIPTION
+1b58ad76bb00a2d26ffba196c727e2df *DESCRIPTION
 06ad4ba0325b6b4cd1db0527d7d29c84 *NAMESPACE
 ef5f13fa9509385f3dfe88834fd6d6d1 *R/dantzig.R
 5b1ac51170b1966dd6b273264c18c8d1 *R/dantzig.generator.R
@@ -34,8 +34,8 @@ f584effdd8752b5956fea4ac449e7e33 *man/stockdata.Rd
 ad5e9b747ce1895e811d2d2e8052eddc *src/heap.h
 73f4a0339e3200c93191fb0ca0fd7ec8 *src/linalg.c
 73fc5b2f3cf1fd12dab5c3066e43f6d7 *src/linalg.h
-7f31e3adcb7ccc095b1276de9a0b528f *src/lu.c
-af36d5dada6396e15a3010c505432213 *src/lu.h
+a77bcf66713a49153642a21c8817ec31 *src/lu.c
+a7a798896af391a004a34cbf7a590037 *src/lu.h
 abc0a80ca8d0260b12e96ba9f9df608f *src/macros.h
 e1be8277ecf906d37bc71e80fb591490 *src/myalloc.h
 700fdd78e2957c90d1e691643322f8e9 *src/paralp.c

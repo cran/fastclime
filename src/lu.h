@@ -41,5 +41,5 @@ int bsolve(
     int *pny
 );
 
-void lu_clo();
+void lu_clo(void);
 
